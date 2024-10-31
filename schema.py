@@ -50,7 +50,7 @@ class Query(graphene.ObjectType):
         return db_session.query(MissionsModel).get(id)
 
     def resolve_missions_by_date_range(self, info, start_date, end_date):
-        return db_session.query(MissionsModel).filter(MissionsModel.mission_date >= start_date, MissionsModel.mission_date <= end_date).all()
+        return db_session.query((MissionsModel).filter(MissionsModel.mission_date >= start_date, MissionsModel.mission_date <= end_date).all()
 
     def resolve_missions_by_country(self, info, country_id):
         return db_session.query(MissionsModel).filter(MissionsModel.country_id == country_id).all()

@@ -9,18 +9,18 @@ Base = declarative_base()
 class TargetModel(Base):
     __tablename__ = 'targets'
     target_id = Column(Integer, primary_key=True)
-    mission_id = Column(Integer, ForeignKey('missions.mission_id'))  # תיקון שם העמודה המקושרת
+    mission_id = Column(Integer, ForeignKey('missions.mission_id'))
     targettype_id = Column(Integer, ForeignKey('target_type.target_type_id'))
     city_id = Column(Integer, ForeignKey('cities.city_id'))
     target_industry = Column(String)
     target_priority = Column(Integer)
 
-    mission = relationship("Missions", back_populates="targets")
+    # תיקון כאן: שינוי מ-"Missions" ל-"MissionsModel"
+    mission = relationship("MissionsModel", back_populates="targets")
     target_type = relationship("TargetTypeModel", back_populates="targets")
     city = relationship("CitiesModel", back_populates="targets")
 
 
-#build a missions model from the mission
 class MissionsModel(Base):
     __tablename__ = 'missions'
     mission_id = Column(Integer, primary_key=True)
@@ -43,6 +43,7 @@ class TargetTypeModel(Base):
 
     targets = relationship("TargetModel", back_populates="target_type")
 
+
 class CitiesModel(Base):
     __tablename__ = 'cities'
     city_id = Column(Integer, primary_key=True)
@@ -61,6 +62,3 @@ class CountriesModel(Base):
     country_name = Column(String)
 
     cities = relationship("CitiesModel", back_populates="country")
-
-
-
