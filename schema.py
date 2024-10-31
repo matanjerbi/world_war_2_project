@@ -97,6 +97,17 @@ class Query(graphene.ObjectType):
                               MissionsModel.aircraft_damaged)
                              .join(TargetModel).filter(TargetModel.targettype_id == target_type_id)).all()
 
+class Mutation(graphene.ObjectType):
+    create_mission = graphene.Field(MissionsType, target_type_id=graphene.Int(required=True), city_id=graphene.Int(required=True), target_industry=graphene.String(required=True))
+    create_target = graphene.Field(TargetType, )
+
+
+    def resolve_create_mission(self, info, target_type_id, city_id, target_industry):
+        mission = MissionsModel(target_type_id=target_type_id, city_id=city_id, target_industry=target_industry)
+        db_session.add(mission)
+        db_session.commit()
+        return mission
+
 
 
 
