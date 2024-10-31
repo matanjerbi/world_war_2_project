@@ -1,5 +1,6 @@
 from datetime import datetime
 import graphene
+from flask import session
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from database import db_session
@@ -45,6 +46,10 @@ class Query(graphene.ObjectType):
     missions_by_country = graphene.List(MissionsType, country_id=graphene.Int(required=True))
     #find mission by target industry
     missions_by_target_industry = graphene.List(MissionsType, target_industry=graphene.String(required=True))
+    #Finding results of an attack by type of attack
+    missions_by_target_type_id = graphene.List(MissionsType, target_type_id=graphene.Int(required=True))
+
+
 
 
 
@@ -84,6 +89,16 @@ class Query(graphene.ObjectType):
             .filter(TargetModel.target_industry == target_industry)
             .all()
         )
+
+    def resolve_missions_by_target_type_id(self, info, target_type_id):
+        session = db_session()
+        return session.query((MissionsModel.aircraft_returned,
+                              MissionsModel.aircraft_failed,
+                              MissionsModel.aircraft_damaged)
+                             .join(TargetModel).filter(TargetModel.targettype_id == target_type_id)).all()
+
+
+
 
 
 
